@@ -20,6 +20,9 @@ export default class Tool {
   @Column('varchar')
   url: string;
 
+  @Column('varchar')
+  tags: string;
+
   @CreateDateColumn()
   created_at: Date;
 

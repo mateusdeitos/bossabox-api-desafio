@@ -1,5 +1,5 @@
 import Tool from '@modules/tool/entities/typeorm/Tool';
-import FakeToolRepository from '@modules/tool/repositories/fakes/FakeUserRepository';
+import FakeToolRepository from '@modules/tool/repositories/fakes/FakeToolRepository';
 import ServiceValidationException from '@shared/errors/ServiceValidationException';
 import CreateToolService from '../CreateToolService';
 
@@ -21,6 +21,18 @@ describe('Criação de Tools', () => {
     });
     expect(tool).toBeDefined();
     expect(tool.id).toBe(1);
+  });
+  it('Deve poder criar uma tool com tags', async () => {
+    const tool = await createToolService.execute({
+      title: 'Notion',
+      description:
+        'All in one tool to organize teams and ideas. Write, plan, collaborate, and get organized. ',
+      url: 'https://notion.so',
+      tags: ['notion', 'nice', 'notes', 'useful'],
+    });
+    expect(tool).toBeDefined();
+    expect(tool.id).toBe(1);
+    expect(tool.tags).toBe('notion,nice,notes,usefuls');
   });
 
   it('Não deve poder criar uma tool com o mesmo título', async () => {
