@@ -13,7 +13,7 @@ export default class User {
   id: number;
 
   @Column('varchar')
-  nome: string;
+  name: string;
 
   @Column({ type: 'varchar', unique: true })
   email: string;

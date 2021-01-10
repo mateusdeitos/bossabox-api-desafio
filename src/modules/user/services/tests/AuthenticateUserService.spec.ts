@@ -30,7 +30,7 @@ describe('Criação de Usuários', () => {
     );
     createdUser = await createUserService.execute({
       ...new User(),
-      nome: 'Joãozinho',
+      name: 'Joãozinho',
       password: 'teste1234',
       email: 'joaozinho@teste123.com.br',
     });
