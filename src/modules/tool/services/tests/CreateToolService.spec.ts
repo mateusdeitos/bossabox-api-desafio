@@ -32,7 +32,9 @@ describe('Criação de Tools', () => {
     });
     expect(tool).toBeDefined();
     expect(tool.id).toBe(1);
-    expect(tool.tags).toBe('notion,nice,notes,usefuls');
+    expect(tool.tags).toEqual(
+      expect.arrayContaining(['notion', 'nice', 'notes', 'useful']),
+    );
   });
 
   it('Não deve poder criar uma tool com o mesmo título', async () => {

@@ -10,7 +10,7 @@ export default class UserRepository implements IUserRepository {
     this.ormRepository = getRepository(User);
   }
 
-  public async create(user: ICreateUserDTO): Promise<User> {
+  public async create(user: User): Promise<User> {
     return this.ormRepository.save(user);
   }
 

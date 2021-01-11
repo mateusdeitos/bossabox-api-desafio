@@ -13,7 +13,7 @@ export default class FakeToolRepository implements IToolRepository {
     this.ormRepository = [];
   }
 
-  public async create(tool: ICreateToolDTO): Promise<Tool> {
+  public async create(tool: Tool): Promise<Tool> {
     const newTool = {
       ...new Tool(),
       ...tool,

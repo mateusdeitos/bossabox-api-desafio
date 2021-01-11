@@ -13,7 +13,7 @@ export default class FakeUserRepository implements IUserRepository {
     this.ormRepository = [];
   }
 
-  public async create(user: ICreateUserDTO): Promise<User> {
+  public async create(user: User): Promise<User> {
     const newUser = {
       ...new User(),
       ...user,

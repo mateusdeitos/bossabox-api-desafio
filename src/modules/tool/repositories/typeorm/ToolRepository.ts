@@ -10,8 +10,8 @@ export default class ToolRepository implements IToolRepository {
     this.ormRepository = getRepository(Tool);
   }
 
-  public async create(user: ICreateToolDTO): Promise<Tool> {
-    return this.ormRepository.save(user);
+  public async create(tool: Tool): Promise<Tool> {
+    return this.ormRepository.save(tool);
   }
 
   public async findByProp(
