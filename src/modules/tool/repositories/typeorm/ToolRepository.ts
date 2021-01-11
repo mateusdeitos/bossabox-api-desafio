@@ -14,6 +14,10 @@ export default class ToolRepository implements IToolRepository {
     return this.ormRepository.save(tool);
   }
 
+  public async delete(id: number): Promise<void> {
+    await this.ormRepository.delete({ id });
+  }
+
   public async findByProp(
     prop: keyof Tool,
     value: Tool[keyof Tool],

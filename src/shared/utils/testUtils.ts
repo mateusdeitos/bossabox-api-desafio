@@ -20,6 +20,16 @@ export const saveObjectInRepository = <T extends idRequired>(
   return newObject;
 };
 
+export const removeObjectInRepository = <T extends idRequired>(
+  repository: T[],
+  id: number,
+): void => {
+  const index = repository.findIndex(obj => obj.id === id);
+  if (index >= 0) {
+    repository.splice(index, 1);
+  }
+};
+
 export const findEntityInRepositoryByProp = <T>(
   repository: T[],
   props: { propName: keyof T; propValue: T[keyof T] },

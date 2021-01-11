@@ -5,6 +5,7 @@ import { Request, Response } from 'express';
 import { HTTPStatusCodeEnum } from '@shared/errors/dto/HTTPStatusCodeEnum';
 import { ICreateToolDTO } from '../dto/ICreateToolDTO';
 import CreateToolService from '../services/CreateToolService';
+import DeleteToolService from '../services/DeleteToolService';
 
 export default class ToolController
   extends BaseController
@@ -19,6 +20,22 @@ export default class ToolController
     return super.getResponse(
       request,
       response.status(HTTPStatusCodeEnum.CREATED).json(newUser),
+    );
+  }
+
+  public async destroy(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { id } = request.params;
+
+    const deleteToolService = container.resolve(DeleteToolService);
+
+    await deleteToolService.execute(Number(id));
+
+    return super.getResponse(
+      request,
+      response.status(HTTPStatusCodeEnum.SUCCESS_NO_CONTENT).send(),
     );
   }
 }

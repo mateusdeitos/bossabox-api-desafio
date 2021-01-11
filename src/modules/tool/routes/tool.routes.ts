@@ -9,13 +9,14 @@ const toolController = new ToolController();
 toolRouter.use(checkAuthentication);
 toolRouter.post(
   '/',
-  celebrate(
-    {
-      body: ToolValidationSchema.store,
-    },
-    { abortEarly: false },
-  ),
+  celebrate({ body: ToolValidationSchema.store }, { abortEarly: false }),
   toolController.store,
+);
+
+toolRouter.delete(
+  '/:id',
+  celebrate({ params: ToolValidationSchema.destroy }, { abortEarly: false }),
+  toolController.destroy,
 );
 
 export default toolRouter;

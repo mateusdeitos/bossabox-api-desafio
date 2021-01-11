@@ -7,4 +7,7 @@ export const ToolValidationSchema = {
     url: Joi.string().required().min(6),
     tags: Joi.array().items(Joi.string()),
   }),
+  destroy: Joi.object().keys({
+    id: Joi.number().min(1).required(),
+  }),
 };

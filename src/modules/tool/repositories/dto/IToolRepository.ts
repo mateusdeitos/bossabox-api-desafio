@@ -3,6 +3,7 @@ import { ICreateToolDTO } from '@modules/tool/dto/ICreateToolDTO';
 
 export interface IToolRepository {
   create(tool: Tool): Promise<Tool>;
+  delete(id: number): Promise<void>;
   findByProp(
     prop: keyof Tool,
     value: Tool[keyof Tool],

@@ -3,6 +3,7 @@ import Tool from '@modules/tool/entities/typeorm/Tool';
 import {
   saveObjectInRepository,
   findEntityInRepositoryByProp,
+  removeObjectInRepository,
 } from '@shared/utils/testUtils';
 import { IToolRepository } from '../dto/IToolRepository';
 
@@ -21,6 +22,10 @@ export default class FakeToolRepository implements IToolRepository {
       updated_at: new Date(),
     };
     return saveObjectInRepository(this.ormRepository, newTool);
+  }
+
+  public async delete(id: number): Promise<void> {
+    removeObjectInRepository(this.ormRepository, id);
   }
 
   public async findByProp(
