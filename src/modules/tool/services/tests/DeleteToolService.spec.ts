@@ -5,7 +5,7 @@ import { HTTPStatusCodeEnum } from '@shared/errors/dto/HTTPStatusCodeEnum';
 import CreateToolService from '../CreateToolService';
 import DeleteToolService from '../DeleteToolService';
 
-describe('Criação de Tools', () => {
+describe('Deleção de Tools', () => {
   let fakeToolRepository: FakeToolRepository;
   let createToolService: CreateToolService;
   let deleteToolService: DeleteToolService;

@@ -30,6 +30,13 @@ export const removeObjectInRepository = <T extends idRequired>(
   }
 };
 
+export const paginateResults = <T>(
+  results: T[],
+  limit: number,
+  offset: number,
+): T[] =>
+  results.filter((_, index) => index >= offset && index <= offset + limit);
+
 export const findEntityInRepositoryByProp = <T>(
   repository: T[],
   props: { propName: keyof T; propValue: T[keyof T] },

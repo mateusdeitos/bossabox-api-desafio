@@ -1,6 +1,7 @@
 import Tool from '@modules/tool/entities/typeorm/Tool';
-import { getRepository, Repository } from 'typeorm';
-import { ICreateToolDTO } from '@modules/tool/dto/ICreateToolDTO';
+import { Brackets, getRepository, Repository } from 'typeorm';
+import { IResponseListDTO } from '@shared/controllers/dto/IFilterListDTO';
+import { IListToolsDTO } from '@modules/tool/dto/IListToolsDTO';
 import { IToolRepository } from '../dto/IToolRepository';
 
 export default class ToolRepository implements IToolRepository {
@@ -16,6 +17,50 @@ export default class ToolRepository implements IToolRepository {
 
   public async delete(id: number): Promise<void> {
     await this.ormRepository.delete({ id });
+  }
+
+  public async index({
+    tags,
+    limit = 10,
+    offset: currentOffset = 0,
+    orderBy = [{ column: 'created_at', order: 'DESC' }],
+  }: IListToolsDTO): Promise<IResponseListDTO<Tool>> {
+    // Inicia a query
+    let query = this.ormRepository.createQueryBuilder('tools');
+
+    // Se foi informado tags, cria a cláusula de filtro para cada tag
+    if (tags) {
+      query = query.andWhere(
+        new Brackets(sqlClause =>
+          tags.split(',').map((tag, index) =>
+            sqlClause.orWhere(`tools.tags like :tag-${index}`, {
+              [`tag-${index}`]: `%${tag}%`,
+            }),
+          ),
+        ),
+      );
+    }
+
+    // Grava o total de resultados
+    const totalResults = await query.getCount();
+
+    // Adiciona as ordenações
+    orderBy.map(({ column, order }) =>
+      query.addOrderBy(`tools.${column}`, order),
+    );
+
+    // Seta a paginação
+    query.limit(limit);
+    query.offset(currentOffset);
+
+    // Executa a query
+    const results = await query.getMany();
+
+    return {
+      currentOffset,
+      results,
+      totalResults,
+    };
   }
 
   public async findByProp(

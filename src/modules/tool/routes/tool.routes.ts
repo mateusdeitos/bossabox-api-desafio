@@ -19,4 +19,10 @@ toolRouter.delete(
   toolController.destroy,
 );
 
+toolRouter.get(
+  '/',
+  celebrate({ query: ToolValidationSchema.index }, { abortEarly: false }),
+  toolController.index,
+);
+
 export default toolRouter;
