@@ -7,6 +7,7 @@ export enum HTTPStatusCodeEnum {
   TOO_MANY_REQUESTS = 429,
   SUCCESS = 200,
   SUCCESS_NO_CONTENT = 204,
+  CREATED = 201,
   INTERNAL_ERROR = 500,
 }
 

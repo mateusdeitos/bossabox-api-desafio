@@ -18,7 +18,7 @@ export default class ToolController
 
     return super.getResponse(
       request,
-      response.status(HTTPStatusCodeEnum.SUCCESS).json(newUser),
+      response.status(HTTPStatusCodeEnum.CREATED).json(newUser),
     );
   }
 }
