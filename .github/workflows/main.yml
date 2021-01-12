@@ -35,7 +35,7 @@ jobs:
           target: "app/bossabox-api-desafio/"
       
       # Dependências, testes, migrations, reiniciar servidor
-      - name: Install dependencies on Digital Ocean Server
+      - name: Dependencies, tests, migrations, server restart
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
