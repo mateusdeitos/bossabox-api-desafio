@@ -51,7 +51,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
           source: ".,!node_modules"
-          target: "app/bossabox-api-desafio/"
+          target: "~/app/bossabox-api-desafio/"
       
       # Dependências, testes, migrations, reiniciar servidor
       - name: Dependencies, migrations, server restart
