@@ -3,7 +3,6 @@ import { IControllers } from '@shared/controllers/dto/IControllers';
 import { container } from 'tsyringe';
 import { Request, Response } from 'express';
 import { HTTPStatusCodeEnum } from '@shared/errors/dto/HTTPStatusCodeEnum';
-import { classToClass } from 'class-transformer';
 import { ICreateUserDTO } from '../dto/ICreateUserDTO';
 import CreateUserService from '../services/CreateUserService';
 
@@ -19,7 +18,7 @@ export default class UserController
 
     return super.getResponse(
       request,
-      response.status(HTTPStatusCodeEnum.CREATED).json(classToClass(newUser)),
+      response.status(HTTPStatusCodeEnum.CREATED).json(newUser),
     );
   }
 }

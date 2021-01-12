@@ -1,5 +1,6 @@
 import { ICreateUserDTO } from '@modules/user/dto/ICreateUserDTO';
 import User from '@modules/user/entities/typeorm/User';
+import { classToClass } from 'class-transformer';
 import { getRepository, Repository } from 'typeorm';
 import { IUserRepository } from '../dto/IUserRepository';
 
@@ -11,7 +12,8 @@ export default class UserRepository implements IUserRepository {
   }
 
   public async create(user: User): Promise<User> {
-    return this.ormRepository.save(user);
+    const newUser = this.ormRepository.create(user);
+    return this.ormRepository.save(newUser);
   }
 
   public async findByProp(
