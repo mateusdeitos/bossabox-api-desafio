@@ -66,6 +66,7 @@ jobs:
           script: |
                   cd ~/app/bossabox-api-desafio/
                   yarn
+                  yarn build
                   yarn typeorm migration:run
                   pm2 restart bossabox-api
 
