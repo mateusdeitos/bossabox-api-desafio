@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD Digital Ocean
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
 
 jobs:
   build:
+    name: CI Pipeline
     runs-on: ubuntu-latest
 
     steps:
@@ -35,6 +36,12 @@ jobs:
       - name: Run tests
         run: yarn jest --coverage
         
+  deploy:
+    name: CD Pipeline
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
       # Copiar todas as pastas para a Digital Ocean
       - name: Copy files to Digital Ocean Server, except node_modules
         uses: appleboy/scp-action@master
