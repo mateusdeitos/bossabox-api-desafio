@@ -24,8 +24,8 @@ jobs:
         run: yarn build
         
       # Executar testes
-      - name: Run build
-        run: yarn test --no-coverage
+      - name: Run tests
+        run: yarn test
         
       # Copiar todas as pastas para a Digital Ocean
       - name: Copy files to Digital Ocean Server
