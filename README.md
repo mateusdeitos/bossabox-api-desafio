@@ -162,14 +162,13 @@ TYPEORM_USERNAME=root
 TYPEORM_PASSWORD=root
 TYPEORM_DATABASE=my_db
 TYPEORM_MIGRATIONS_DIR=./src/shared/typeorm/migrations
+TYPEORM_MIGRATIONS=./dist/shared/typeorm/migrations/*.js
 
 # TypeORM LOCAL
 TYPEORM_ENTITIES_LOCAL=./src/modules/**/entities/typeorm/*.ts
-TYPEORM_MIGRATIONS_LOCAL=./src/shared/typeorm/migrations/*.ts
 
 # TypeORM DEPLOY
 TYPEORM_ENTITIES_DEPLOY=./dist/modules/**/entities/typeorm/*.js
-TYPEORM_MIGRATIONS_DEPLOY=./dist/shared/typeorm/migrations/*.js
 
 # Porta da API
 PORT=3333

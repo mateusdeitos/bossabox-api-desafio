@@ -5,10 +5,6 @@ const entities =
   process.env.NODE_ENV === 'dev'
     ? [String(process.env.TYPEORM_ENTITIES_LOCAL)]
     : [String(process.env.TYPEORM_ENTITIES_DEPLOY)];
-const migrations =
-  process.env.NODE_ENV === 'dev'
-    ? [String(process.env.TYPEORM_MIGRATIONS_LOCAL)]
-    : [String(process.env.TYPEORM_MIGRATIONS_DEPLOY)];
 
 const config: ConnectionOptions = {
   type: process.env.TYPEORM_CONNECTION as 'mariadb',
@@ -20,7 +16,7 @@ const config: ConnectionOptions = {
   connectTimeout: 60000,
   acquireTimeout: 60000,
   entities,
-  migrations,
+  migrations: [String(process.env.TYPEORM_MIGRATIONS)],
   cli: {
     migrationsDir: String(process.env.TYPEORM_MIGRATIONS_DIR),
   },
