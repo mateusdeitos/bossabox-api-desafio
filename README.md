@@ -1,13 +1,20 @@
-# Template Api
+# VUTTR API
+
+## Documentação API:
+
+
+
 ## Ferramentas
 * Express
 * MariaDB
 * Typescript
 * TypeORM
 * Teste unitários com JEST
+* CI/CD Pipeline com Github Actions
+* Deploy na Digital Ocean
 
 # Introdução
-Esse repositório tem o objetivo de auxiliar no ponto de partida da criação de uma API Node. A API foi desenvolvida visando boas práticas mas melhorias são sempre bem-vindas, caso achar que algo possa ser feito melhor, abra uma PR que irei avaliar.
+Essa API foi criada para cumprir os requisitos mínimos e alguns requisitos extras do desafio de backend da BossaBox
 
 # Estrutura da API
 A API segue a lógica da imagem abaixo:
@@ -21,24 +28,28 @@ Tipagens adicionais, como por exemplo, foi incluído um objeto user com a propri
 ## config
 Arquivos auxiliares de configuração como configuração de base de dados, token JWT, e etc.
 ## modules
-Os módulos da API, como ponto de partida foi criado o módulo de usuários que possui a estrutura necessária para a criação de outros módulos que a API venha a suportar. A escolha por criar um módulo de usuários é que esse é o módulo mais comum a ser criado e normalmente o primeiro.
+Os módulos da API, seguindo o conceito de DDD (Domain Driven Design), foram criados 2 módulos: user e tool.
+
+Abaixo explico como foi dividida a estrutura dentro de cada módulo:
 
 ### Entities
 São as entidades, ou seja, são as classes que definem como os dados serão trabalhados dentro do módulo e como as tabelas do banco de dados serão criadas.
 ### Routes
-Contém as rotas pertinentes ao módulo, nesse módulo foram criadas as rotas de usuários e de autenticação.
+Contém as rotas pertinentes ao módulo, cada rota contém sua URI própria, middlewares de validação de dados e autenticação e método a ser executado no Controller.
 
 ### Controllers
 São as classes chamadas pelas rotas. Como boa prática um Controller deve possuir no máximo 5 métodos:
 * store: Criação de entidades
 * update: Atualização de entidades
-* destroy: Deleção de entidades
+* destroy: Remoção de entidades
 * show: Pesquisar uma entidade singular
 * index: Pesquisar mais de uma entidade
 
 **Cada um desses métodos deve utilizar como parâmetros `request`, `response` e retornar uma `Promise<response>`**
 
-Dentro dos controllers não ocorrem validações, apenas o recebimento de dados do request, instanciação e execução dos `Services` e retorno do `response`.
+Dentro dos controllers não ocorrem validações, apenas o recebimento e preparação de dados do request para realizar a execução dos `Services` e retorno do `response`.
+
+O retorno é feito dentro da classe BaseController (extendida por todos Controllers) para que caso seja necessário futuramente interceptar o retorno antes de retornar ao cliente, seja possível fazer em um lugar só
 
 ### Services
 São as classes principais da API, são neles que as regras de negócio da API são validadas. Um `Service` deve possuir apenas um método público chamado `execute`, ou seja, um `Service` só pode possuir uma responsabilidade, de executar o serviço pelo qual foi criado.
@@ -47,21 +58,31 @@ O construtor de um `Service` deve receber as dependências que serão utilizadas
 
 As dependências de um `Service` são injetadas no mesmo utilizando a lib `tsyringe` fazendo com que fique muito simples mudar a dependência que ele utiliza e realizar testes unitários.
 
-É importante que a interface de dados que o método `execute` receber seja o mesmo tipo que será passado para o repositório principal desse `Service`, exemplo: No `CreateUserService`, foi utilizada a interface `ICreateUserDTO` como tipagem dos dados do método `execute` e essa é a mesma interface do método `save` do `UserRepositories`.
-
+É importante que a interface de dados que o método `execute` seja criada e armazenada em seu arquivo próprio dentro de `/src/modules/**/dto/`. Exemplo: `/src/modules/user/dto/ICreateUserDTO.ts` -> Essa interface é a utilizada pelo service de criação de usuários
 
 ### Rotas
-As requisições dos clientes são recebidas aqui, todas as rotas da aplicação são importadas no arquivo `./src/shared/routes/index.ts`
+As requisições dos clientes são recebidas aqui, todas as rotas dos módulos são importadas no arquivo `./src/shared/routes/index.ts`
 
 ### Testes
-Dentro da pasta services de cada módulo há uma pasta contendo os arquivos de teste. Cada Service possui um arquivo de teste respectivo, sugiro sempre que for criar um novo service, iniciar criando-o e criar o teste respectivo antes de criar o Controller, rotas e etc. Seguindo os conceitos de TDD.
+Dentro da pasta services de cada módulo há uma pasta contendo os arquivos de teste. Cada Service possui um arquivo de teste respectivo, sugiro sempre que for criar um novo service, iniciar criando-o e criar o teste respectivo antes de criar o Controller, rotas e etc.
 
-Para rodar todos os testes basta rodar o comando `yarn test`. Será gerado um arquivo `html` com o relatório dos testes dentro de `./coverage/lcov-report/index.html`.
+Seguindo os conceitos de TDD (Test Driven Development), siga o passo-a-passo:
+- Crie a entidade do novo módulo (se necessário) na pasta `<modulo>/entities`.
+- Crie as interfaces que o service irá usar na pasta `<modulo>/dto`.
+- Crie o Service na pasta `<modulo>/service`.
+- Crie a interface que o repositório e o fakeRepositório irão utilizar na pasta `<modulo>/repositories/dto`.
+- Crie o repositório na pasta `<modulo>/repositories/typeorm` e registre-o como dependência no arquivo `/src/shared/container/index.ts` (se necessário).
+- Crie o fakeRepositório (se necessário) na pasta `<modulo>/repositories/fakes`.
+- Crie o arquivo de testes e acompanhe pelo relatório de coverage quais trechos do service não foram testados ainda. (`coverage/lcov-report/index.html`, execute esse arquivo com a extensão do vscode `Live Server`)
+- Sempre que criar um teste novo, faça-o falhar para verificar se realmente está testando o que é necessário.
+- Quando o coverage do service atingir 100% no relatório, pode continuar com a criação do Controller, Rotas, Validação de rotas e etc.
+
+Para rodar todos os testes basta rodar o comando `yarn test`. O relatório dos testes será gerado em `./coverage/lcov-report/index.html`.
 
 ### Repositories
 São abstrações do banco de dados, nessa API foi utilizado o typeORM para criar essas abstrações, mas pode ser feito com outro ORM tranquilamente.
 
-Além do repositório do banco de dados, também são criados repositórios idênticos chamados de fakes. Esses fakeRepositories são utilizados como mock nos testes unitários dos `Services` e **devem** implementar as mesmas interfaces que o repositório do BD implementa. Essas interfaces estão localizadas dentro de `./src/modules/**/repositories/dto/I<entity>Repositoriy`
+Além do repositório do banco de dados, também são criados repositórios idênticos chamados de fakes. Esses fakeRepositories são utilizados como mock nos testes unitários dos `Services` e **devem** implementar as mesmas interfaces que o repositório do BD implementa. Essas interfaces estão localizadas dentro de `./src/modules/**/repositories/dto/I<modulo>Repositoriy`
 
 ## shared
 Contém arquivos que são compartilhados entre módulos
@@ -84,11 +105,13 @@ São implementações de dependências externas, essas implementações devem re
 ### typeorm/migrations
 Local onde os arquivos de migrations são armazenados, comandos úteis:
 * Criar nova migration: `yarn typeorm migration:create -n <nomeDaMigration>`
-* Rodar as migrations pendentes: `yarn typeorm migration:run`
-* Reverter a última migration: `yarn typeorm migration:revert`
+* Rodar as migrations pendentes: `yarn mig:run` (irá realizar o build previamente)
+* Reverter a última migration: `yarn mig:revert` (irá realizar o build previamente)
+
+**OBS:** O build é rodado antes dos comandos `mig:run e mig:revert` para facilitar o processo de deploy, pois dessa forma as migrations são transpiladas e rodadas como arquivos `.js`
 
 ### utils
-Algumas funções úteis para serem utilizadas, num primeiro momento criei apenas funções para utilizar nos testes unitários, foram usados tipos genéricos, portanto, não importa a entidade que o repositório possua, essa funções irão funcionar, mas qualquer bug me avise :D
+Algumas funções úteis para serem utilizadas e reaproveitadas entre diferentes módulos.
 
 ## Instruções para rodar
 
@@ -138,14 +161,11 @@ TYPEORM_PORT=1234
 TYPEORM_USERNAME=root
 TYPEORM_PASSWORD=root
 TYPEORM_DATABASE=my_db
-TYPEORM_ENTITIES=./src/modules/**/entities/typeorm/*.ts
-TYPEORM_MIGRATIONS=./src/shared/typeorm/migrations/*.ts
-TYPEORM_MIGRATIONS_DIR=./src/shared/typeorm/migrations/
 
 # TypeORM
-TYPEORM_ENTITIES=./src/modules/**/entities/typeorm/*.ts
-TYPEORM_MIGRATIONS=./src/shared/typeorm/migrations/*.ts
-TYPEORM_MIGRATIONS_DIR=./src/shared/typeorm/migrations/
+TYPEORM_ENTITIES=./dist/modules/**/entities/typeorm/*.js
+TYPEORM_MIGRATIONS=./dist/shared/typeorm/migrations/*.js
+TYPEORM_MIGRATIONS_DIR=./src/shared/typeorm/migrations
 
 # Porta da API
 PORT=3333
