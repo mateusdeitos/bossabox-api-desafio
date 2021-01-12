@@ -1,4 +1,5 @@
 # VUTTR API
+![CI/CD Digital Ocean](https://github.com/mateusdeitos/bossabox-api-desafio/workflows/CI/CD%20Digital%20Ocean/badge.svg)
 
 ## Documentação API:
 https://bossaboxdesafiobackend.docs.apiary.io/#
