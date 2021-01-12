@@ -20,7 +20,7 @@ describe('Criação de Tools', () => {
       url: 'https://notion.so',
     });
     expect(tool).toBeDefined();
-    expect(tool.id).toBe(2);
+    expect(tool.id).toBe(1);
   });
   it('Deve poder criar uma tool com tags', async () => {
     const tool = await createToolService.execute({
