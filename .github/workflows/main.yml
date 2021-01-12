@@ -23,6 +23,10 @@ jobs:
       - name: Run build
         run: yarn build
         
+      # Executar build
+      - name: Run tests
+        run: yarn jest --no-coverage
+        
       # Copiar todas as pastas para a Digital Ocean
       - name: Copy files to Digital Ocean Server
         uses: appleboy/scp-action@master
