@@ -44,7 +44,7 @@ describe('Criação de Usuários', () => {
     });
     expect(token).toBeDefined();
     expect(user).toBeDefined();
-    expect(user).toHaveProperty('email');
+    expect(user).toHaveProperty('emails');
     expect(user.email).toBe(createdUser.email);
   });
   it('Não deve poder autenticar um usuário que não existe', async () => {
