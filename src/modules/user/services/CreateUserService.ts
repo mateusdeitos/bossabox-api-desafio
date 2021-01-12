@@ -2,6 +2,7 @@ import { USER_REPOSITORY_TOKEN } from '@shared/container';
 import ServiceValidationException from '@shared/errors/ServiceValidationException';
 import { HASH_PROVIDER_TOKEN } from '@shared/providers/HashProvider';
 import IHashProvider from '@shared/providers/HashProvider/dto/IHashProvider';
+import { classToClass } from 'class-transformer';
 import { inject, injectable } from 'tsyringe';
 import { ICreateUserDTO } from '../dto/ICreateUserDTO';
 import User from '../entities/typeorm/User';
@@ -35,6 +36,12 @@ export default class CreateUserService {
     await this.validadeUser(user);
 
     const password = await this.hashProvider.generateHash(user.password);
-    return this.userRepository.create({ ...new User(), ...user, password });
+    const newUser = this.userRepository.create({
+      ...new User(),
+      ...user,
+      password,
+    });
+
+    return classToClass(newUser);
   }
 }
