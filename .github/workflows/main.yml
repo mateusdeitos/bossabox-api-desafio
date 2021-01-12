@@ -10,6 +10,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      # This caches all of your node_modules folders throughout your repository,
+      # and busts the cache every time a yarn.lock file changes.
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+        
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.4 
         with:
@@ -25,10 +33,10 @@ jobs:
         
       # Executar build
       - name: Run tests
-        run: yarn jest --no-coverage
+        run: yarn jest --coverage
         
       # Copiar todas as pastas para a Digital Ocean
-      - name: Copy files to Digital Ocean Server
+      - name: Copy files to Digital Ocean Server, except node_modules
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -49,7 +57,6 @@ jobs:
           script: |
                   cd ~/app/bossabox-api-desafio/
                   yarn       
-                  yarn jest --no-coverage     
                   yarn typeorm migration:run      
                   pm2 restart bossabox-api
       
