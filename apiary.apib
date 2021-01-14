@@ -31,7 +31,7 @@ HOST: http://161.35.135.236/v1
         + name: Mateus Deitos (string)
         + email: mate.deitos@hotmail.com (string)
         + password: 123456 (string)
-    
+
 
 + Response 201 (application/json)
     + Attributes (User)
@@ -44,7 +44,7 @@ HOST: http://161.35.135.236/v1
     + Attributes (object)
         + email: mate.deitos@hotmail.com (string)
         + password: 123456 (string)
-    
+
 
 + Response 200 (application/json)
     + Attributes (object)
@@ -61,7 +61,7 @@ HOST: http://161.35.135.236/v1
         + description: All in one tool to organize teams and ideas. Write, plan, collaborate, and get organized. ✔ (string)
         + url: `https://notion.so` (string)
         + tags: `nice,top` (array)
-    
+
 
 + Response 201 (application/json)
     + Attributes (Tool)
@@ -69,14 +69,16 @@ HOST: http://161.35.135.236/v1
 ## Deleta uma ferramenta [DELETE /tools/{id}]
 + Parameters
     + id: 1 (number) - ID da ferramenta
-    
+
 
 + Response 204
 
 ## Lista ferramentas [GET /tools{?tags}{?orderBy}{?limit}{?offset}]
 
 + Parameters
-    + tags: node,http2,organizing (string, optional) - Tags da pesquisa separadas por vírgula
+    + search: node,http2,organizing (string, optional) - Termo ou tags para pesquisar
+    + searchByTags: (boolean, optional) - true = pesquisa o termo nas tags, false = pesquisa no title ou description
+        + Default: false
     + orderBy: `(title,ASC);(id,DESC)` (string, optional) - Ordenação dos resultados
         + Default: `(created_at, DESC)`
     + limit: 10 (number, optional) - Limite de resultados por página

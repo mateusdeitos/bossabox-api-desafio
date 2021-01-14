@@ -28,19 +28,28 @@ export default class FakeToolRepository implements IToolRepository {
   }
 
   public async index({
-    tags,
+    search,
+    searchByTags,
     limit = 10,
     offset: currentOffset = 0,
     orderBy = [{ column: 'created_at', order: 'DESC' }],
   }: IListToolsDTO): Promise<IResponseListDTO<Tool>> {
     let results = this.ormRepository;
-    if (tags) {
-      const filterTags = tags.split(',');
+    if (search && searchByTags) {
+      const filterTags = search.split(',');
 
       // Filtra os resultados pelas tags que foram informadas na pesquisa
       results = this.ormRepository.filter(
         ({ tags }) =>
           tags.split(',').filter(tag => filterTags.includes(tag)).length > 0,
+      );
+    }
+
+    if (!searchByTags && search) {
+      results = this.ormRepository.filter(
+        ({ title, description }) =>
+          title.toLowerCase().indexOf(search.toLowerCase()) !== -1 ||
+          description.toLowerCase().indexOf(search.toLowerCase()) !== -1,
       );
     }
 

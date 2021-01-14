@@ -29,12 +29,15 @@ export default class ToolController
   }
 
   public async index(request: Request, response: Response): Promise<Response> {
-    const { tags, limit, offset, orderBy } = request.query;
+    const { search, searchByTags, limit, offset, orderBy } = request.query;
 
     const listToolsService = container.resolve(ListToolsService);
-
+    const searchTerm = search ? String(search) : '';
     const listResults = await listToolsService.execute({
-      tags: prepareTagsStringFromQueryParams(tags ? String(tags) : ''),
+      search: searchByTags
+        ? prepareTagsStringFromQueryParams(searchTerm)
+        : searchTerm,
+      searchByTags: Boolean(searchByTags),
       limit: Number(limit),
       offset: Number(offset),
       orderBy: prepareOrderByArgumentFromQueryParams(

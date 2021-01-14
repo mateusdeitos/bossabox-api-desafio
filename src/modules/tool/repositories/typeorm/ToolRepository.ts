@@ -20,7 +20,8 @@ export default class ToolRepository implements IToolRepository {
   }
 
   public async index({
-    tags,
+    search,
+    searchByTags,
     limit = 10,
     offset: currentOffset = 0,
     orderBy = [{ column: 'created_at', order: 'DESC' }],
@@ -29,14 +30,26 @@ export default class ToolRepository implements IToolRepository {
     let query = this.ormRepository.createQueryBuilder('tools');
 
     // Se foi informado tags, cria a cláusula de filtro para cada tag
-    if (tags) {
+    if (searchByTags && search) {
       query = query.andWhere(
         new Brackets(sqlClause =>
-          tags.split(',').map((tag, index) =>
+          search.split(',').map((tag, index) =>
             sqlClause.orWhere(`tools.tags like :tag-${index}`, {
               [`tag-${index}`]: `%${tag}%`,
             }),
           ),
+        ),
+      );
+    }
+
+    if (!searchByTags && search) {
+      query = query.andWhere(
+        new Brackets(sqlClause =>
+          sqlClause
+            .where('tools.title like :title', { title: `%${search}%` })
+            .orWhere('tools.description like :description', {
+              description: `%${search}%`,
+            }),
         ),
       );
     }

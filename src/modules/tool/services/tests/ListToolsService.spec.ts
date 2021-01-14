@@ -61,7 +61,7 @@ describe('Listagem de Tools', () => {
       results,
       totalResults,
     } = await listToolsService.execute({
-      tags: 'api',
+      search: 'api',
     });
 
     expect(currentOffset).toBe(0);
@@ -70,24 +70,28 @@ describe('Listagem de Tools', () => {
   });
   it('Deve poder paginar os resultados', async () => {
     const firstSearch = await listToolsService.execute({
-      tags: 'node',
+      search: 'node',
+      searchByTags: true,
       limit: 1,
     });
 
     const secondSearch = await listToolsService.execute({
-      tags: 'node',
+      search: 'node',
+      searchByTags: true,
       limit: 1,
       offset: 1,
     });
 
     const thirdSearch = await listToolsService.execute({
-      tags: 'node',
+      search: 'node',
+      searchByTags: true,
       limit: 1,
       offset: 2,
     });
 
     const fourthSearch = await listToolsService.execute({
-      tags: 'node',
+      search: 'node',
+      searchByTags: true,
       limit: 1,
       offset: 3,
     });
@@ -112,6 +116,14 @@ describe('Listagem de Tools', () => {
     });
 
     expect(totalResults).toBe(4);
+    expect(results[0]).toHaveProperty('title', 'Notion');
+  });
+  it('Deve poder pesquisar por titulo', async () => {
+    const { totalResults, results } = await listToolsService.execute({
+      search: 'Notion',
+    });
+
+    expect(totalResults).toBe(1);
     expect(results[0]).toHaveProperty('title', 'Notion');
   });
 });

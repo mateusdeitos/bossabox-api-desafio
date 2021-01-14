@@ -14,13 +14,15 @@ export default class ListToolsService {
   ) {}
 
   public async execute({
-    tags = '',
+    search = '',
+    searchByTags = false,
     limit,
     offset,
     orderBy,
   }: IListToolsDTO): Promise<IResponseListDTO<Tool>> {
     return this.toolRepository.index({
-      tags,
+      search,
+      searchByTags,
       limit,
       offset,
       orderBy,
