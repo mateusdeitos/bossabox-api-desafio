@@ -11,7 +11,7 @@ export const ToolValidationSchema = {
     id: Joi.number().min(1).required(),
   }),
   index: Joi.object().keys({
-    search: Joi.string(),
+    search: Joi.string().allow(''),
     searchByTags: Joi.boolean().default(false),
     limit: Joi.number().min(1).default(10),
     offset: Joi.number().min(0).default(0),
