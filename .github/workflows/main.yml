@@ -83,8 +83,7 @@ jobs:
           script: |
                   mv ~/app/bossabox-api-desafio/.env ~/app/
                   cd ~/app/bossabox-api-desafio/
-                  shopt -s extglob
-                  rm -- !(.env)
+                  rm -rf .
                   mv ~/app/pre-deploy/* .
                   mv ~/app/.env .
                   rm -rf ~/app/pre-deploy/
