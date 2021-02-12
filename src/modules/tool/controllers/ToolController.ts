@@ -20,11 +20,11 @@ export default class ToolController
 
     const createToolService = container.resolve(CreateToolService);
 
-    const newUser = await createToolService.execute(toolData);
+    const newTool = await createToolService.execute(toolData);
 
     return super.getResponse(
       request,
-      response.status(HTTPStatusCodeEnum.CREATED).json(newUser),
+      response.status(HTTPStatusCodeEnum.CREATED).json(newTool),
     );
   }
 
